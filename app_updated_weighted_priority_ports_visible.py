@@ -800,29 +800,12 @@ def prepare_port_assets(df_ports):
     return ports
 
 
-def calculate_weight_percentages(raw_weights, available_components):
-    """
-    Returns the selected weights as direct percentage values.
-
-    The default methodology now uses 25 + 25 + 20 + 20 + 10 = 100,
-    so the app does not normalise the weights.
-
-    Important: if users change the sidebar weights so they no longer add up
-    to 100, the model still applies them directly as percentages. The app
-    displays a warning, but does not rebalance them silently.
-    """
-    clean_components = [component for component in available_components if component is not None]
-
-    active = {
-        key: float(raw_weights.get(key, 0))
-        for key in clean_components
-        if float(raw_weights.get(key, 0)) > 0
-    }
-
-    if not active:
-        return {"Ammonia_Anchor_Score": 100.0}
-
-    return active
+def calculate_effective_weights(raw_weights, available_components):
+    active = {key: raw_weights.get(key, 0) for key in available_components if raw_weights.get(key, 0) > 0}
+    total = sum(active.values())
+    if total == 0:
+        return {"Ammonia_Anchor_Score": 1.0}
+    return {key: value / total for key, value in active.items()}
 
 
 def build_hydrogen_opportunity_table(
@@ -885,14 +868,14 @@ def build_hydrogen_opportunity_table(
     if not water_assets.empty:
         available_components.append("Water_Score")
 
-    weight_percentages = calculate_weight_percentages(raw_weights, available_components)
+    effective_weights = calculate_effective_weights(raw_weights, available_components)
     opportunity["Opportunity_Score"] = 0.0
-    for score_col, weight in weight_percentages.items():
-        opportunity["Opportunity_Score"] += opportunity[score_col] * (weight / 100)
+    for score_col, weight in effective_weights.items():
+        opportunity["Opportunity_Score"] += opportunity[score_col] * weight
 
-    opportunity["Opportunity_Score"] = opportunity["Opportunity_Score"].clip(lower=0, upper=100).round(2)
+    opportunity["Opportunity_Score"] = opportunity["Opportunity_Score"].round(2)
     opportunity["Priority_Band"] = opportunity["Opportunity_Score"].apply(classify_score)
-    opportunity["Methodology_Weights"] = str({key: round(value, 2) for key, value in weight_percentages.items()})
+    opportunity["Methodology_Weights"] = str({key: round(value, 3) for key, value in effective_weights.items()})
     return opportunity.sort_values("Opportunity_Score", ascending=False).reset_index(drop=True)
 
 
@@ -1130,7 +1113,7 @@ def build_port_template_workbook():
     return output.getvalue()
 
 
-def show_dictionary(raw_weights=None, weight_percentages=None):
+def show_dictionary(raw_weights=None, effective_weights=None):
     st.subheader("Dictionary and methodology guide")
     st.markdown("""
     This dashboard is a first-pass screening tool. It does not say where a hydrogen plant should definitely be built. It ranks locations that deserve deeper technical, commercial, regulatory, land, water-rights, grid, pipeline and offtake feasibility work.
@@ -1138,7 +1121,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
 
     terms = pd.DataFrame({
         "Term": [
-            "Hydrogen opportunity score", "Hydrogen hotspot", "Ammonia / fertilizer anchor", "Shipping port access", "Wind score", "Solar score", "Water score", "Proximity score", "Quality score", "Weight percentage"
+            "Hydrogen opportunity score", "Hydrogen hotspot", "Ammonia / fertilizer anchor", "Shipping port access", "Wind score", "Solar score", "Water score", "Proximity score", "Quality score", "Effective weight"
         ],
         "Meaning": [
             "The final 0-100 score used to rank candidate hydrogen plant locations.",
@@ -1149,8 +1132,8 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "The combined quality and proximity score for the best matched solar asset.",
             "The combined capacity and proximity score for the best matched water asset.",
             "A 0-100 score where closer assets get a higher score within the selected maximum useful distance.",
-            "A 0-100 score that scales resource strength, for example wind density, solar capacity or water capacity.",
-            "The direct percentage weight applied to each score component. The model does not normalise these weights."
+            "A 0-100 score that normalises resource strength, for example wind density, solar capacity or water capacity.",
+            "The actual model weight after the app normalises the raw selected weights to add up to 100%."
         ],
         "How to read it": [
             "Higher is better, but it is still only a screening signal.",
@@ -1162,7 +1145,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "A large or reliable water source close to the candidate site improves the score.",
             "If the distance exceeds the threshold, proximity score can fall to zero.",
             "Quality is relative to the uploaded/selected dataset, not an absolute engineering guarantee.",
-            "For example, the default model uses 25 + 25 + 20 + 20 + 10 = 100, so each weight is applied directly as a percentage."
+            "For example, raw weights of 25,25,20,20,20 add up to 110, so the app converts them to effective percentages."
         ]
     })
     st.dataframe(terms, width="stretch", hide_index=True)
@@ -1185,9 +1168,9 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
         st.markdown("### Raw weights selected in the sidebar")
         st.dataframe(pd.DataFrame({"Component": list(raw_weights.keys()), "Raw weight": list(raw_weights.values())}), width="stretch", hide_index=True)
 
-    if weight_percentages is not None:
-        st.markdown("### Weight percentages used by the model")
-        st.dataframe(pd.DataFrame({"Score component": list(weight_percentages.keys()), "Weight (%)": [round(v, 2) for v in weight_percentages.values()]}), width="stretch", hide_index=True)
+    if effective_weights is not None:
+        st.markdown("### Effective weights used by the model")
+        st.dataframe(pd.DataFrame({"Score component": list(effective_weights.keys()), "Effective weight (%)": [round(v * 100, 2) for v in effective_weights.values()]}), width="stretch", hide_index=True)
 
     limitations = pd.DataFrame({
         "Limitation": ["Straight-line distance", "Proxy candidate locations", "Port fallback list", "Mixed units", "Data freshness", "No project economics yet"],
@@ -1195,7 +1178,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "The model does not yet calculate road, pipeline, grid or shipping route distance.",
             "Where a dedicated ammonia plant location file is unavailable, fertilizer plants are used as industrial anchors.",
             "If Shipping Ports.xlsx is missing, a built-in fallback list is used and should be replaced with a verified dataset.",
-            "Wind, solar, water and port variables use different units and are scaled for screening only.",
+            "Wind, solar, water and port variables use different units and are normalised for screening only.",
             "Bad coordinates or outdated plant/port/water data will distort results.",
             "Capital expenditure, operating cost, tariffs, permits, land and offtake are not yet scored."
         ]
@@ -1376,12 +1359,12 @@ available_water_types = sorted(raw_water["Water_Type"].unique()) if not raw_wate
 selected_water_types = st.sidebar.multiselect("Water resources used in scoring", options=available_water_types, default=available_water_types, disabled=raw_water.empty)
 
 with st.sidebar.expander("Weighted-priority inputs", expanded=True):
-    st.caption("Defaults follow the review discussion and add up to 100: 25 + 25 + 20 + 20 + 10. The app applies these as direct percentages without normalising.")
+    st.caption("Defaults follow the review discussion. They are automatically normalised because 25 + 25 + 20 + 20 + 20 = 110, not 100.")
     ammonia_weight = st.slider("Ammonia / fertilizer anchor weight", 0, 100, 25)
     port_weight = st.slider("Shipping port access weight", 0, 100, 25)
     wind_weight = st.slider("Wind weight", 0, 100, 20)
     solar_weight = st.slider("Solar weight", 0, 100, 20, disabled=raw_solar.empty)
-    water_weight = st.slider("Water weight", 0, 100, 10, disabled=raw_water.empty)
+    water_weight = st.slider("Water weight", 0, 100, 20, disabled=raw_water.empty)
 
 raw_weights = {
     "Ammonia_Anchor_Score": ammonia_weight,
@@ -1454,15 +1437,8 @@ opportunity = build_hydrogen_opportunity_table(
 
 filtered_opportunity = opportunity[opportunity["Opportunity_Score"] >= min_score].copy() if not opportunity.empty else opportunity
 top_hotspots = filtered_opportunity.head(top_n_hotspots).copy() if not filtered_opportunity.empty else pd.DataFrame()
-weight_percentages = calculate_weight_percentages(raw_weights, ["Ammonia_Anchor_Score", "Port_Access_Score", "Wind_Score", "Solar_Score" if not solar_assets.empty else None, "Water_Score" if not water_assets.empty else None])
-weight_percentages = {k: v for k, v in weight_percentages.items() if k is not None}
-selected_weight_total = round(sum(weight_percentages.values()), 2)
-
-if selected_weight_total != 100:
-    st.sidebar.warning(
-        f"Current active weights add up to {selected_weight_total}%, not 100%. "
-        "The app will apply them directly and will not normalise them."
-    )
+effective_weights = calculate_effective_weights(raw_weights, ["Ammonia_Anchor_Score", "Port_Access_Score", "Wind_Score", "Solar_Score" if not solar_assets.empty else None, "Water_Score" if not water_assets.empty else None])
+effective_weights = {k: v for k, v in effective_weights.items() if k is not None}
 
 # =====================================================
 # Tabs
@@ -1494,7 +1470,7 @@ with tab_overview:
     col5.metric("Water assets", f"{len(water_assets):,}")
 
     st.markdown("### Current methodology weights")
-    st.dataframe(pd.DataFrame({"Score component": list(weight_percentages.keys()), "Weight (%)": [round(v, 2) for v in weight_percentages.values()]}), width="stretch", hide_index=True)
+    st.dataframe(pd.DataFrame({"Score component": list(effective_weights.keys()), "Effective weight (%)": [round(v * 100, 2) for v in effective_weights.values()]}), width="stretch", hide_index=True)
 
     st.markdown("### Top hydrogen hotspots")
     if top_hotspots.empty:
@@ -1610,7 +1586,7 @@ with tab_ports:
 
 
 with tab_methodology:
-    show_dictionary(raw_weights=raw_weights, weight_percentages=weight_percentages)
+    show_dictionary(raw_weights=raw_weights, effective_weights=effective_weights)
 
 with tab_quality:
     st.subheader("Data quality and validation report")

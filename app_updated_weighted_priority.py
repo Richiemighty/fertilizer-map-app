@@ -403,39 +403,35 @@ def apply_numeric_range_filter(df, column, selected_range):
 
 def get_builtin_african_ports():
     """
-    Temporary fallback list of major African shipping ports.
-
-    Important: this is not a verified dataset from the project drive. It is a manual
-    placeholder included only so the app can run when Shipping Ports.xlsx is missing.
-    Replace this with a verified port-location workbook before treating port scores as
-    client-ready.
+    Fallback reference list of major African shipping ports.
+    This keeps the app usable even when a dedicated Shipping Ports.xlsx file is not yet available.
+    Replace or override this by adding Shipping Ports.xlsx to the root folder.
     """
-    fallback_source = "Manual app fallback - indicative only, not a verified project dataset"
-
     return pd.DataFrame([
-        {"Port_Name": "Port Said", "Country": "Egypt", "Latitude": 31.2653, "Longitude": 32.3019, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Alexandria Port", "Country": "Egypt", "Latitude": 31.2001, "Longitude": 29.9187, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Damietta Port", "Country": "Egypt", "Latitude": 31.4550, "Longitude": 31.7690, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Tanger Med", "Country": "Morocco", "Latitude": 35.8870, "Longitude": -5.5000, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Casablanca Port", "Country": "Morocco", "Latitude": 33.6000, "Longitude": -7.6167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Durban Port", "Country": "South Africa", "Latitude": -29.8680, "Longitude": 31.0456, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Cape Town Port", "Country": "South Africa", "Latitude": -33.9180, "Longitude": 18.4241, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Coega / Ngqura Port", "Country": "South Africa", "Latitude": -33.8000, "Longitude": 25.6833, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Mombasa Port", "Country": "Kenya", "Latitude": -4.0435, "Longitude": 39.6682, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Dar es Salaam Port", "Country": "Tanzania", "Latitude": -6.8235, "Longitude": 39.2695, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Djibouti Port", "Country": "Djibouti", "Latitude": 11.5880, "Longitude": 43.1450, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Lagos Apapa Port", "Country": "Nigeria", "Latitude": 6.4483, "Longitude": 3.3642, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Tin Can Island Port", "Country": "Nigeria", "Latitude": 6.4400, "Longitude": 3.3400, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Lekki Deep Sea Port", "Country": "Nigeria", "Latitude": 6.4300, "Longitude": 4.0250, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Port Harcourt Port", "Country": "Nigeria", "Latitude": 4.7774, "Longitude": 7.0134, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Tema Port", "Country": "Ghana", "Latitude": 5.6500, "Longitude": 0.0167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Takoradi Port", "Country": "Ghana", "Latitude": 4.8845, "Longitude": -1.7554, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Abidjan Port", "Country": "Côte d'Ivoire", "Latitude": 5.3167, "Longitude": -4.0167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Dakar Port", "Country": "Senegal", "Latitude": 14.6928, "Longitude": -17.4467, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Luanda Port", "Country": "Angola", "Latitude": -8.7832, "Longitude": 13.2344, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Maputo Port", "Country": "Mozambique", "Latitude": -25.9653, "Longitude": 32.5892, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Beira Port", "Country": "Mozambique", "Latitude": -19.8333, "Longitude": 34.8500, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
-        {"Port_Name": "Walvis Bay Port", "Country": "Namibia", "Latitude": -22.9576, "Longitude": 14.5053, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": fallback_source},
+        {"Port_Name": "Port Said", "Country": "Egypt", "Latitude": 31.2653, "Longitude": 32.3019, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Alexandria Port", "Country": "Egypt", "Latitude": 31.2001, "Longitude": 29.9187, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Damietta Port", "Country": "Egypt", "Latitude": 31.4550, "Longitude": 31.7690, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Tanger Med", "Country": "Morocco", "Latitude": 35.8870, "Longitude": -5.5000, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Casablanca Port", "Country": "Morocco", "Latitude": 33.6000, "Longitude": -7.6167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Durban Port", "Country": "South Africa", "Latitude": -29.8680, "Longitude": 31.0456, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Cape Town Port", "Country": "South Africa", "Latitude": -33.9180, "Longitude": 18.4241, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Coega / Ngqura Port", "Country": "South Africa", "Latitude": -33.8000, "Longitude": 25.6833, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Mombasa Port", "Country": "Kenya", "Latitude": -4.0435, "Longitude": 39.6682, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Dar es Salaam Port", "Country": "Tanzania", "Latitude": -6.8235, "Longitude": 39.2695, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Djibouti Port", "Country": "Djibouti", "Latitude": 11.5880, "Longitude": 43.1450, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Lagos Apapa Port", "Country": "Nigeria", "Latitude": 6.4483, "Longitude": 3.3642, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Tin Can Island Port", "Country": "Nigeria", "Latitude": 6.4400, "Longitude": 3.3400, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Lekki Deep Sea Port", "Country": "Nigeria", "Latitude": 6.4300, "Longitude": 4.0250, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Port Harcourt Port", "Country": "Nigeria", "Latitude": 4.7774, "Longitude": 7.0134, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Tema Port", "Country": "Ghana", "Latitude": 5.6500, "Longitude": 0.0167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Takoradi Port", "Country": "Ghana", "Latitude": 4.8845, "Longitude": -1.7554, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Abidjan Port", "Country": "Côte d'Ivoire", "Latitude": 5.3167, "Longitude": -4.0167, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Dakar Port", "Country": "Senegal", "Latitude": 14.6928, "Longitude": -17.4467, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Luanda Port", "Country": "Angola", "Latitude": -8.7832, "Longitude": 13.2344, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Maputo Port", "Country": "Mozambique", "Latitude": -25.9653, "Longitude": 32.5892, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Beira Port", "Country": "Mozambique", "Latitude": -19.8333, "Longitude": 34.8500, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Walvis Bay Port", "Country": "Namibia", "Latitude": -22.9576, "Longitude": 14.5053, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
+        {"Port_Name": "Mombasa Port", "Country": "Kenya", "Latitude": -4.0435, "Longitude": 39.6682, "Port_Type": "Seaport", "Capacity_Value": np.nan, "Source": "Built-in fallback list"},
     ])
 
 
@@ -800,29 +796,12 @@ def prepare_port_assets(df_ports):
     return ports
 
 
-def calculate_weight_percentages(raw_weights, available_components):
-    """
-    Returns the selected weights as direct percentage values.
-
-    The default methodology now uses 25 + 25 + 20 + 20 + 10 = 100,
-    so the app does not normalise the weights.
-
-    Important: if users change the sidebar weights so they no longer add up
-    to 100, the model still applies them directly as percentages. The app
-    displays a warning, but does not rebalance them silently.
-    """
-    clean_components = [component for component in available_components if component is not None]
-
-    active = {
-        key: float(raw_weights.get(key, 0))
-        for key in clean_components
-        if float(raw_weights.get(key, 0)) > 0
-    }
-
-    if not active:
-        return {"Ammonia_Anchor_Score": 100.0}
-
-    return active
+def calculate_effective_weights(raw_weights, available_components):
+    active = {key: raw_weights.get(key, 0) for key in available_components if raw_weights.get(key, 0) > 0}
+    total = sum(active.values())
+    if total == 0:
+        return {"Ammonia_Anchor_Score": 1.0}
+    return {key: value / total for key, value in active.items()}
 
 
 def build_hydrogen_opportunity_table(
@@ -885,14 +864,14 @@ def build_hydrogen_opportunity_table(
     if not water_assets.empty:
         available_components.append("Water_Score")
 
-    weight_percentages = calculate_weight_percentages(raw_weights, available_components)
+    effective_weights = calculate_effective_weights(raw_weights, available_components)
     opportunity["Opportunity_Score"] = 0.0
-    for score_col, weight in weight_percentages.items():
-        opportunity["Opportunity_Score"] += opportunity[score_col] * (weight / 100)
+    for score_col, weight in effective_weights.items():
+        opportunity["Opportunity_Score"] += opportunity[score_col] * weight
 
-    opportunity["Opportunity_Score"] = opportunity["Opportunity_Score"].clip(lower=0, upper=100).round(2)
+    opportunity["Opportunity_Score"] = opportunity["Opportunity_Score"].round(2)
     opportunity["Priority_Band"] = opportunity["Opportunity_Score"].apply(classify_score)
-    opportunity["Methodology_Weights"] = str({key: round(value, 2) for key, value in weight_percentages.items()})
+    opportunity["Methodology_Weights"] = str({key: round(value, 3) for key, value in effective_weights.items()})
     return opportunity.sort_values("Opportunity_Score", ascending=False).reset_index(drop=True)
 
 
@@ -1130,7 +1109,7 @@ def build_port_template_workbook():
     return output.getvalue()
 
 
-def show_dictionary(raw_weights=None, weight_percentages=None):
+def show_dictionary(raw_weights=None, effective_weights=None):
     st.subheader("Dictionary and methodology guide")
     st.markdown("""
     This dashboard is a first-pass screening tool. It does not say where a hydrogen plant should definitely be built. It ranks locations that deserve deeper technical, commercial, regulatory, land, water-rights, grid, pipeline and offtake feasibility work.
@@ -1138,7 +1117,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
 
     terms = pd.DataFrame({
         "Term": [
-            "Hydrogen opportunity score", "Hydrogen hotspot", "Ammonia / fertilizer anchor", "Shipping port access", "Wind score", "Solar score", "Water score", "Proximity score", "Quality score", "Weight percentage"
+            "Hydrogen opportunity score", "Hydrogen hotspot", "Ammonia / fertilizer anchor", "Shipping port access", "Wind score", "Solar score", "Water score", "Proximity score", "Quality score", "Effective weight"
         ],
         "Meaning": [
             "The final 0-100 score used to rank candidate hydrogen plant locations.",
@@ -1149,8 +1128,8 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "The combined quality and proximity score for the best matched solar asset.",
             "The combined capacity and proximity score for the best matched water asset.",
             "A 0-100 score where closer assets get a higher score within the selected maximum useful distance.",
-            "A 0-100 score that scales resource strength, for example wind density, solar capacity or water capacity.",
-            "The direct percentage weight applied to each score component. The model does not normalise these weights."
+            "A 0-100 score that normalises resource strength, for example wind density, solar capacity or water capacity.",
+            "The actual model weight after the app normalises the raw selected weights to add up to 100%."
         ],
         "How to read it": [
             "Higher is better, but it is still only a screening signal.",
@@ -1162,7 +1141,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "A large or reliable water source close to the candidate site improves the score.",
             "If the distance exceeds the threshold, proximity score can fall to zero.",
             "Quality is relative to the uploaded/selected dataset, not an absolute engineering guarantee.",
-            "For example, the default model uses 25 + 25 + 20 + 20 + 10 = 100, so each weight is applied directly as a percentage."
+            "For example, raw weights of 25,25,20,20,20 add up to 110, so the app converts them to effective percentages."
         ]
     })
     st.dataframe(terms, width="stretch", hide_index=True)
@@ -1185,9 +1164,9 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
         st.markdown("### Raw weights selected in the sidebar")
         st.dataframe(pd.DataFrame({"Component": list(raw_weights.keys()), "Raw weight": list(raw_weights.values())}), width="stretch", hide_index=True)
 
-    if weight_percentages is not None:
-        st.markdown("### Weight percentages used by the model")
-        st.dataframe(pd.DataFrame({"Score component": list(weight_percentages.keys()), "Weight (%)": [round(v, 2) for v in weight_percentages.values()]}), width="stretch", hide_index=True)
+    if effective_weights is not None:
+        st.markdown("### Effective weights used by the model")
+        st.dataframe(pd.DataFrame({"Score component": list(effective_weights.keys()), "Effective weight (%)": [round(v * 100, 2) for v in effective_weights.values()]}), width="stretch", hide_index=True)
 
     limitations = pd.DataFrame({
         "Limitation": ["Straight-line distance", "Proxy candidate locations", "Port fallback list", "Mixed units", "Data freshness", "No project economics yet"],
@@ -1195,7 +1174,7 @@ def show_dictionary(raw_weights=None, weight_percentages=None):
             "The model does not yet calculate road, pipeline, grid or shipping route distance.",
             "Where a dedicated ammonia plant location file is unavailable, fertilizer plants are used as industrial anchors.",
             "If Shipping Ports.xlsx is missing, a built-in fallback list is used and should be replaced with a verified dataset.",
-            "Wind, solar, water and port variables use different units and are scaled for screening only.",
+            "Wind, solar, water and port variables use different units and are normalised for screening only.",
             "Bad coordinates or outdated plant/port/water data will distort results.",
             "Capital expenditure, operating cost, tariffs, permits, land and offtake are not yet scored."
         ]
@@ -1376,12 +1355,12 @@ available_water_types = sorted(raw_water["Water_Type"].unique()) if not raw_wate
 selected_water_types = st.sidebar.multiselect("Water resources used in scoring", options=available_water_types, default=available_water_types, disabled=raw_water.empty)
 
 with st.sidebar.expander("Weighted-priority inputs", expanded=True):
-    st.caption("Defaults follow the review discussion and add up to 100: 25 + 25 + 20 + 20 + 10. The app applies these as direct percentages without normalising.")
+    st.caption("Defaults follow the review discussion. They are automatically normalised because 25 + 25 + 20 + 20 + 20 = 110, not 100.")
     ammonia_weight = st.slider("Ammonia / fertilizer anchor weight", 0, 100, 25)
     port_weight = st.slider("Shipping port access weight", 0, 100, 25)
     wind_weight = st.slider("Wind weight", 0, 100, 20)
     solar_weight = st.slider("Solar weight", 0, 100, 20, disabled=raw_solar.empty)
-    water_weight = st.slider("Water weight", 0, 100, 10, disabled=raw_water.empty)
+    water_weight = st.slider("Water weight", 0, 100, 20, disabled=raw_water.empty)
 
 raw_weights = {
     "Ammonia_Anchor_Score": ammonia_weight,
@@ -1454,29 +1433,15 @@ opportunity = build_hydrogen_opportunity_table(
 
 filtered_opportunity = opportunity[opportunity["Opportunity_Score"] >= min_score].copy() if not opportunity.empty else opportunity
 top_hotspots = filtered_opportunity.head(top_n_hotspots).copy() if not filtered_opportunity.empty else pd.DataFrame()
-weight_percentages = calculate_weight_percentages(raw_weights, ["Ammonia_Anchor_Score", "Port_Access_Score", "Wind_Score", "Solar_Score" if not solar_assets.empty else None, "Water_Score" if not water_assets.empty else None])
-weight_percentages = {k: v for k, v in weight_percentages.items() if k is not None}
-selected_weight_total = round(sum(weight_percentages.values()), 2)
-
-if selected_weight_total != 100:
-    st.sidebar.warning(
-        f"Current active weights add up to {selected_weight_total}%, not 100%. "
-        "The app will apply them directly and will not normalise them."
-    )
+effective_weights = calculate_effective_weights(raw_weights, ["Ammonia_Anchor_Score", "Port_Access_Score", "Wind_Score", "Solar_Score" if not solar_assets.empty else None, "Water_Score" if not water_assets.empty else None])
+effective_weights = {k: v for k, v in effective_weights.items() if k is not None}
 
 # =====================================================
 # Tabs
 # =====================================================
 
-tab_overview, tab_map, tab_hotspots, tab_ranking, tab_ports, tab_methodology, tab_quality, tab_guide = st.tabs([
-    "Overview",
-    "Satellite map",
-    "Hotspots",
-    "Opportunity ranking",
-    "Shipping port data",
-    "Methodology dictionary",
-    "Data quality",
-    "Data guide"
+tab_overview, tab_map, tab_hotspots, tab_ranking, tab_methodology, tab_quality, tab_guide = st.tabs([
+    "Overview", "Satellite map", "Hotspots", "Opportunity ranking", "Methodology dictionary", "Data quality", "Data guide"
 ])
 
 with tab_overview:
@@ -1494,7 +1459,7 @@ with tab_overview:
     col5.metric("Water assets", f"{len(water_assets):,}")
 
     st.markdown("### Current methodology weights")
-    st.dataframe(pd.DataFrame({"Score component": list(weight_percentages.keys()), "Weight (%)": [round(v, 2) for v in weight_percentages.values()]}), width="stretch", hide_index=True)
+    st.dataframe(pd.DataFrame({"Score component": list(effective_weights.keys()), "Effective weight (%)": [round(v * 100, 2) for v in effective_weights.values()]}), width="stretch", hide_index=True)
 
     st.markdown("### Top hydrogen hotspots")
     if top_hotspots.empty:
@@ -1556,61 +1521,8 @@ with tab_ranking:
         st.dataframe(filtered_opportunity[display_columns], width="stretch", hide_index=True)
         st.download_button("Download filtered ranking as CSV", data=filtered_opportunity.to_csv(index=False).encode("utf-8"), file_name="hydrogem_hydrogen_opportunity_ranking.csv", mime="text/csv")
 
-with tab_ports:
-    st.subheader("Shipping port data")
-
-    if port_bundle.used_builtin:
-        st.warning(
-            "The port data below is a manual fallback embedded in the app. "
-            "It was not loaded from a verified Shipping Ports.xlsx file, so use it only for demo/screening until a verified dataset is available."
-        )
-    else:
-        st.success(f"Ports loaded from: {port_bundle.source_name}")
-
-    st.markdown("### Port dataset currently used by the scoring model")
-
-    port_display_columns = [
-        "Port_Name",
-        "Country",
-        "Latitude",
-        "Longitude",
-        "Port_Type",
-        "Capacity_Value",
-        "Source"
-    ]
-
-    available_port_columns = [
-        column for column in port_display_columns
-        if column in raw_ports.columns
-    ]
-
-    ports_to_display = raw_ports[available_port_columns].sort_values(
-        by=["Country", "Port_Name"],
-        ascending=[True, True]
-    ).reset_index(drop=True)
-
-    st.dataframe(ports_to_display, width="stretch", hide_index=True)
-
-    st.download_button(
-        label="Download current port dataset as CSV",
-        data=ports_to_display.to_csv(index=False).encode("utf-8"),
-        file_name="shipping_ports_current_dataset.csv",
-        mime="text/csv"
-    )
-
-    st.markdown("### How the port data is used")
-    st.markdown(
-        """
-        The app uses the port dataset to calculate **Port Access Score** for each candidate hydrogen plant location.
-        The nearer a candidate location is to a selected shipping port, the stronger its port access score.
-
-        This is a screening proxy for export logistics. It does not yet test actual road access, rail access, berth capacity, port congestion, export permits, ammonia handling capability, or shipping route economics.
-        """
-    )
-
-
 with tab_methodology:
-    show_dictionary(raw_weights=raw_weights, weight_percentages=weight_percentages)
+    show_dictionary(raw_weights=raw_weights, effective_weights=effective_weights)
 
 with tab_quality:
     st.subheader("Data quality and validation report")
